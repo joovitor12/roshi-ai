@@ -2,7 +2,11 @@ package com.roshi.entities;
 
 import com.roshi.enums.AssistanceEnum;
 import com.roshi.enums.TypeEnum;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Character {
 
     private Long id;

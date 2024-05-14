@@ -1,7 +1,12 @@
 package com.roshi.controllers;
 
+import com.roshi.utils.Utils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,6 +27,8 @@ import java.util.Base64;
 @RequestMapping("/api/roshi")
 public class RoshiController {
 
+    Utils utils = new Utils();
+
     @GetMapping(value = "/insight", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getInsight(){
         return ResponseEntity.ok().body("definitive insight");
@@ -29,24 +36,35 @@ public class RoshiController {
 
     @GetMapping(value = "/prompt", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getTranslatePrompt() throws IOException{
-        String consulUrl = "http://localhost:8500/v1/kv/prompts/fighterz_translate_prompt";
+        //  RESPONSE
+        // {
+        //    "error": {
+        //        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        //        "type": "insufficient_quota",
+        //        "param": null,
+        //        "code": "insufficient_quota"
+        //    }
+        //}
+        String apiUrl = "https://api.openai.com/v1/chat/completions";
+        String apiKey = utils.getConsulKeyValue("http://localhost:8500/v1/kv/openai/api_key");
 
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(consulUrl);
+        String requestBody = utils.getConsulKeyValue("http://localhost:8500/v1/kv/prompts/fighterz_translate_prompt");
 
+        HttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(apiUrl);
 
-        HttpResponse response = httpClient.execute(request);
-        String responseBody = EntityUtils.toString((response.getEntity()));
+        httpPost.addHeader("Content-Type", "application/json");
+        httpPost.addHeader("Authorization", "Bearer " + apiKey);
 
-        JSONArray jsonArray = new JSONArray(responseBody);
-        JSONObject jsonObject = jsonArray.getJSONObject(0);
+        StringEntity stringEntity = new StringEntity(requestBody);
+        httpPost.setEntity(stringEntity);
 
-        String base64EncodedPrompt = jsonObject.getString("Value");
+        HttpResponse httpResponse = httpClient.execute(httpPost);
 
-        byte[] decodedBytes = Base64.getDecoder().decode(base64EncodedPrompt);
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String response = EntityUtils.toString(httpEntity);
 
-        String prompt = new String(decodedBytes);
+        return ResponseEntity.ok().body(response);
 
-        return ResponseEntity.ok().body(prompt);
     }
 }
