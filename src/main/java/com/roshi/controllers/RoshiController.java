@@ -23,7 +23,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import java.io.IOException;
 import java.util.Base64;
 
-@RestController
+
 @RequestMapping("/api/roshi")
 public class RoshiController {
 
@@ -67,4 +67,6 @@ public class RoshiController {
         return ResponseEntity.ok().body(response);
 
     }
+
+
 }
