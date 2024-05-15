@@ -8,15 +8,8 @@ import org.springframework.stereotype.Component;
 @RefreshScope
 public class ConsulConfig {
 
-    @Value("${api-key}")
-    private String apiKey;
-
     @Value("${prompt}")
     private String fighterzTranslatePrompt;
-
-    public String getApiKey(){
-        return apiKey;
-    }
 
     public String getFighterzTranslatePrompt(){
         return fighterzTranslatePrompt;
