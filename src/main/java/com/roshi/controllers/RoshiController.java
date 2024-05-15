@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roshi.config.ConsulConfig;
 import com.roshi.config.PromptConfig;
+import com.roshi.entities.RoshiResponse;
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -33,7 +34,7 @@ public class RoshiController {
     }
 
     @GetMapping(value = "/prompt", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getTranslatePrompt(@RequestParam(value = "sequence", defaultValue = "2M > 5M > j.MLL > j.2H > SD > j.MLL > j.2H > dj.LLL") String sequence) throws JsonProcessingException {
+    public ResponseEntity<RoshiResponse> getTranslatePrompt(@RequestParam(value = "sequence", defaultValue = "2M > 5M > j.MLL > j.2H > SD > j.MLL > j.2H > dj.LLL") String sequence) throws JsonProcessingException {
         String json = config.getFighterzTranslatePrompt();
         ObjectMapper mapper = new ObjectMapper();
         PromptConfig promptConfig = mapper.readValue(json, PromptConfig.class);
@@ -44,7 +45,9 @@ public class RoshiController {
 
         Prompt prompt = new Prompt(List.of(system,user));
 
-        return ResponseEntity.ok().body(chatClient.call(prompt).getResult().getOutput().getContent());
+        RoshiResponse response= new RoshiResponse(chatClient.call(prompt).getResult().getOutput().getContent());
+
+        return ResponseEntity.ok().body(response);
 
 
 
