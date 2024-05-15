@@ -1,72 +1,53 @@
 package com.roshi.controllers;
 
-import com.roshi.utils.Utils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.roshi.config.ConsulConfig;
+import com.roshi.config.PromptConfig;
+import org.springframework.ai.chat.ChatClient;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-
-import java.io.IOException;
-import java.util.Base64;
-
-
+@RestController
 @RequestMapping("/api/roshi")
 public class RoshiController {
 
-    Utils utils = new Utils();
+    @Autowired
+    ConsulConfig config;
 
-    @GetMapping(value = "/insight", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getInsight(){
-        return ResponseEntity.ok().body("definitive insight");
+    private final ChatClient chatClient;
+
+
+    public RoshiController(ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
 
     @GetMapping(value = "/prompt", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getTranslatePrompt() throws IOException{
-        //  RESPONSE
-        // {
-        //    "error": {
-        //        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
-        //        "type": "insufficient_quota",
-        //        "param": null,
-        //        "code": "insufficient_quota"
-        //    }
-        //}
-        String apiUrl = "https://api.openai.com/v1/chat/completions";
-        String apiKey = utils.getConsulKeyValue("http://localhost:8500/v1/kv/openai/api_key");
+    public ResponseEntity<String> getTranslatePrompt(@RequestParam(value = "sequence", defaultValue = "2M > 5M > j.MLL > j.2H > SD > j.MLL > j.2H > dj.LLL") String sequence) throws JsonProcessingException {
+        String json = config.getFighterzTranslatePrompt();
+        ObjectMapper mapper = new ObjectMapper();
+        PromptConfig promptConfig = mapper.readValue(json, PromptConfig.class);
 
-        String requestBody = utils.getConsulKeyValue("http://localhost:8500/v1/kv/prompts/fighterz_translate_prompt");
 
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(apiUrl);
+        var system = new SystemMessage(promptConfig.getPrompt());
+        var user = new UserMessage(sequence);
 
-        httpPost.addHeader("Content-Type", "application/json");
-        httpPost.addHeader("Authorization", "Bearer " + apiKey);
+        Prompt prompt = new Prompt(List.of(system,user));
 
-        StringEntity stringEntity = new StringEntity(requestBody);
-        httpPost.setEntity(stringEntity);
+        return ResponseEntity.ok().body(chatClient.call(prompt).getResult().getOutput().getContent());
 
-        HttpResponse httpResponse = httpClient.execute(httpPost);
 
-        HttpEntity httpEntity = httpResponse.getEntity();
-        String response = EntityUtils.toString(httpEntity);
-
-        return ResponseEntity.ok().body(response);
 
     }
-
 
 }
