@@ -4,21 +4,29 @@ import com.roshi.entities.Fighter;
 import com.roshi.services.FighterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/character")
+@RequestMapping("/api/fighterz")
 public class CharacterController {
 
     @Autowired
     FighterService service;
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/")
     public ResponseEntity<List<Fighter>> findAll(){
-        return ResponseEntity.ok().body(service.getAllCharacters());
+        return ResponseEntity.ok().body(service.getAll());
+    }
+
+    @PostMapping(value = "/save")
+    public ResponseEntity<Fighter> save(@RequestBody Fighter fighter){
+        return ResponseEntity.ok().body(service.save(fighter));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Fighter> findById(@PathVariable String id){
+        return ResponseEntity.ok().body(service.getById(id));
     }
 }

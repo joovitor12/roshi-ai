@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 @Service
 public class RoshiService {
+
+    private Logger logger = Logger.getLogger(RoshiService.class.getName());
 
     @Autowired
     ConsulConfig consulConfig;
@@ -24,6 +27,8 @@ public class RoshiService {
     }
 
     public String getRoshiTranslatorResponse(String sequence) {
+        logger.info("Getting Roshi Translator Response");
+        
         String translatePrompt = consulConfig.getFighterzTranslatePrompt();
         var system = new SystemMessage(translatePrompt);
         var user = new UserMessage(sequence);

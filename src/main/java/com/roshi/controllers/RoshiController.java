@@ -1,6 +1,5 @@
 package com.roshi.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.roshi.services.RoshiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
