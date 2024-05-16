@@ -1,18 +1,13 @@
 package com.roshi.services;
 
 import com.roshi.config.ConsulConfig;
-import com.roshi.entities.RoshiResponse;
-import com.roshi.utils.Utils;
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -39,4 +34,6 @@ public class RoshiService {
 
         return response;
     }
+
+
 }

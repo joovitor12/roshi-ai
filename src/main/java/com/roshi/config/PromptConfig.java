@@ -1,14 +1,12 @@
 package com.roshi.config;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PromptConfig {
+
     private String prompt;
 
-    // getters and setters
-    public String getPrompt() {
-        return prompt;
-    }
-
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
-    }
 }
