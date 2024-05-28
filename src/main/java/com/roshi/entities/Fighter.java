@@ -24,7 +24,7 @@ public class Fighter {
 
     public Fighter (String name, List<Sequence> sequences, TypeEnum type) {
         this.name = name;
-        this.sequences = new ArrayList<>();
+        this.sequences = sequences;
         this.type = type;
     }
 

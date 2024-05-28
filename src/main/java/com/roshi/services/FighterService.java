@@ -1,8 +1,7 @@
 package com.roshi.services;
 
-import com.roshi.config.ConsulConfig;
 import com.roshi.entities.Fighter;
-import com.roshi.repositories.FightersRepository;
+import com.roshi.repositories.FighterzRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ public class FighterService {
     private Logger logger = Logger.getLogger(FighterService.class.getName());
 
     @Autowired
-    FightersRepository repository;
+    FighterzRepository repository;
 
     public List<Fighter> getAll() {
         logger.info("Getting all Fighterz!");
