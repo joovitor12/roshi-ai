@@ -8,11 +8,25 @@ import org.springframework.stereotype.Component;
 @RefreshScope
 public class ConsulConfig {
 
-    @Value("${prompt}")
+    @Value("${insight-prompt}")
+    private String fighterzInsightPrompt;
+
+    @Value("${translate-prompt}")
     private String fighterzTranslatePrompt;
+
+    @Value("${team-prompt}")
+    private String teamPrompt;
 
     public String getFighterzTranslatePrompt(){
         return fighterzTranslatePrompt;
+    }
+
+    public String getFighterzInsightPrompt(){
+        return fighterzInsightPrompt;
+    }
+
+    public String getTeamPrompt(){
+        return teamPrompt;
     }
 
 

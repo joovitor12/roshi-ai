@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 @Service
 public class SequenceService {
 
-    Logger logger = Logger.getLogger(SequenceService.class.getName());
+    private final Logger logger = Logger.getLogger(SequenceService.class.getName());
 
     @Autowired
     FighterzRepository repository;

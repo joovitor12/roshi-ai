@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 @Service
 public class RoshiService {
 
-    private Logger logger = Logger.getLogger(RoshiService.class.getName());
+    private final Logger logger = Logger.getLogger(RoshiService.class.getName());
 
     @Autowired
     ConsulConfig consulConfig;
@@ -35,9 +35,31 @@ public class RoshiService {
 
         Prompt prompt = new Prompt(List.of(system,user));
 
-        String response = chatClient.call(prompt).getResult().getOutput().getContent();
+        return chatClient.call(prompt).getResult().getOutput().getContent();
+    }
 
-        return response;
+    public String getRoshiInsight(String question) {
+        logger.info("Getting Roshi Insight");
+
+        String insightPrompt = consulConfig.getFighterzInsightPrompt();
+        var system = new SystemMessage(insightPrompt);
+        var user = new UserMessage(question);
+
+        Prompt prompt = new Prompt(List.of(system,user));
+
+        return chatClient.call(prompt).getResult().getOutput().getContent();
+    }
+
+    public String getRoshiTeamComposition(String question) {
+        logger.info("Getting Roshi Insight");
+
+        String teamPrompt = consulConfig.getTeamPrompt();
+        var system = new SystemMessage(teamPrompt);
+        var user = new UserMessage(question);
+
+        Prompt prompt = new Prompt(List.of(system,user));
+
+        return chatClient.call(prompt).getResult().getOutput().getContent();
     }
 
 

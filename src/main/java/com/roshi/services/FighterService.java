@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 @Service
 public class FighterService {
 
-    private Logger logger = Logger.getLogger(FighterService.class.getName());
+    private final Logger logger = Logger.getLogger(FighterService.class.getName());
 
     @Autowired
     FighterzRepository repository;

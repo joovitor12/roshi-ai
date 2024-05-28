@@ -22,4 +22,16 @@ public class RoshiController {
         return ResponseEntity.ok().body(service.getRoshiTranslatorResponse(sequence));
     }
 
+    @GetMapping(value = "/insight", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getInsight(@RequestParam(value = "question",
+            defaultValue = "How do i counter a mixup?") String question) {
+        return ResponseEntity.ok().body(service.getRoshiInsight(question));
+    }
+
+    @GetMapping(value = "/team", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getTeam(@RequestParam(value = "question",
+            defaultValue = "Do you know any good team composition?") String question) {
+        return ResponseEntity.ok().body(service.getRoshiTeamComposition(question));
+    }
+
 }
