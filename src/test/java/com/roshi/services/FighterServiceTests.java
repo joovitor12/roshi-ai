@@ -7,11 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -37,10 +39,31 @@ public class FighterServiceTests {
 
         when(repository.findAll()).thenReturn(expectedFighters);
 
-        // Act
         List<Fighter> actualFighters = service.getAll();
 
-        // Assert
         assertEquals(expectedFighters, actualFighters);
+    }
+
+    @Test
+    public void saveTest() {
+        Fighter fighter = new Fighter("Goku (SSJ)", new ArrayList<>(), TypeEnum.FLEXIBLE);
+
+        when(repository.save(Mockito.any(Fighter.class))).thenReturn(fighter);
+
+        Fighter savedFighter = service.save(fighter);
+
+        assertEquals(fighter, savedFighter);
+    }
+
+    @Test
+    public void getByIdTest() {
+        Fighter fighter = new Fighter("Goku (SSJ)", new ArrayList<>(), TypeEnum.FLEXIBLE);
+        String id = "123";
+
+        when(repository.findById(id)).thenReturn(Optional.of(fighter));
+
+        Fighter foundFighter = service.getById(id);
+
+        assertEquals(fighter, foundFighter);
     }
 }
