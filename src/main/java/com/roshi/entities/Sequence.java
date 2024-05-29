@@ -13,5 +13,10 @@ public class Sequence {
     private String sequence;
     private SequenceTypeEnum sequenceType;
 
+    public Sequence(String sequence, SequenceTypeEnum sequenceType) {
+        this.sequence = sequence;
+        this.sequenceType = sequenceType;
+    }
+
 
 }

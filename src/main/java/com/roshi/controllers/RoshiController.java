@@ -16,7 +16,7 @@ public class RoshiController {
     @Autowired
     RoshiService service;
 
-    @GetMapping(value = "/prompt", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/translate", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getTranslatePrompt(@RequestParam(value = "sequence",
             defaultValue = "2M > 5M > j.MLL > j.2H > SD > j.MLL > j.2H > dj.LLL") String sequence) {
         return ResponseEntity.ok().body(service.getRoshiTranslatorResponse(sequence));

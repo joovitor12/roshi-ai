@@ -6,6 +6,7 @@ import com.roshi.repositories.FighterzRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,7 +24,9 @@ public class SequenceService {
         var fighter = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
-        fighter.getSequences().add(sequence);
+        List<Sequence> sequences = new ArrayList<>(fighter.getSequences());
+        sequences.add(sequence);
+        fighter.setSequences(sequences);
 
         repository.save(fighter);
 
