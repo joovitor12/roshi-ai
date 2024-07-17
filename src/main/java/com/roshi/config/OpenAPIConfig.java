@@ -14,6 +14,10 @@ public class OpenAPIConfig {
                 .info(new Info()
                         .title("Roshi AI - API")
                         .version("0.0.1")
-                        .description("Roshi AI - API Documentation"));
+                        .description("""
+        Roshi AI is an intelligent agent for Dragon Ball FighterZ players,\s
+        designed to assist with combo translations, explain game concepts,\s
+        and provide valuable insights on team composition. Welcome, Fighter
+   \s"""));
     }
 }
