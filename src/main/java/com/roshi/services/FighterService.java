@@ -14,7 +14,7 @@ public class FighterService {
     private final Logger logger = Logger.getLogger(FighterService.class.getName());
 
     @Autowired
-    FighterzRepository repository;
+    private FighterzRepository repository;
 
     public List<Fighter> getAll() {
         logger.info("Getting all Fighterz!");

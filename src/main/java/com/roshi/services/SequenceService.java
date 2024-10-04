@@ -16,7 +16,7 @@ public class SequenceService {
     private final Logger logger = Logger.getLogger(SequenceService.class.getName());
 
     @Autowired
-    FighterzRepository repository;
+    private FighterzRepository repository;
 
     public Sequence save(Sequence sequence, String id) {
         logger.info("Saving a Sequence for id " + id);

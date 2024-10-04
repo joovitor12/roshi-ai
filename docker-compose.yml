@@ -1,24 +1,59 @@
-version: '3.8'
+version: '3'
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: roshi-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    networks:
+      - node-network
+
   consul:
-    image: progrium/consul
+    image: consul:1.15.4
+    container_name: dev-consul
     ports:
       - "8500:8500"
     environment:
-      CONSUL_BIND_INTERFACE: eth0
+      - CONSUL_BIND_INTERFACE=eth0
     volumes:
-      - consul_data:/data
+      - ./consul_data:/consul/data
+    command: agent -server -bootstrap-expect=1 -client 0.0.0.0 -ui -data-dir=/consul/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - node-network
 
-  myapp:
-    image: myapp:latest
-    build:
-      context: .
-    depends_on:
-      - consul
-    environment:
-      CONSUL_HOST: consul
+  mongodb:
+    image: mongo:6-jammy
+    container_name: mongo-db
     ports:
-      - "8080:8080"
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    command: --wiredTigerCacheSizeGB 1 --setParameter enableLocalhostAuthBypass=0
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - node-network
 
 volumes:
-  consul_data:
+  dbdata6:
+
+networks:
+  node-network:
+    driver: bridge
