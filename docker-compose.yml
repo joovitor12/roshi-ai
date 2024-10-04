@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   app:
     build:
@@ -8,14 +8,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mongodb:
-        condition: service_healthy
       consul:
         condition: service_healthy
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
-    networks:
-      - node-network
 
   consul:
     image: consul:1.15.4
@@ -28,32 +24,7 @@ services:
       - ./consul_data:/consul/data
     command: agent -server -bootstrap-expect=1 -client 0.0.0.0 -ui -data-dir=/consul/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8500/v1/status/leader" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - node-network
-
-  mongodb:
-    image: mongo:6-jammy
-    container_name: mongo-db
-    ports:
-      - '27017:27017'
-    volumes:
-      - dbdata6:/data/db
-    command: --wiredTigerCacheSizeGB 1 --setParameter enableLocalhostAuthBypass=0
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    networks:
-      - node-network
-
-volumes:
-  dbdata6:
-
-networks:
-  node-network:
-    driver: bridge

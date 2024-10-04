@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .mvn/wrapper/
+/consul_data
+/mongo_data
 
 ### STS ###
 .apt_generated
