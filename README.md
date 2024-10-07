@@ -58,7 +58,9 @@ Let me know if you'd like further refinements!
    - [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
    - [Maven 3.8.5](https://maven.apache.org/docs/3.8.5/release-notes.html)
    - [Docker](https://docs.docker.com)
-     
+   - [MongoDB](https://www.mongodb.com)
+
+- Ensure your local connection to your database (MongoDB)
 - Open the repository in any IDE (e.g., IntelliJ, STS) or directly in your terminal
 - Navigate to the project root directory `/roshi-ai` and run the command `docker-compose up --build` (see notes below)
 - With the Docker container running, access Consul at `http://localhost:8500/ui/dc1/kv`
